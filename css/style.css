@@ -78,4 +78,10 @@ div{
     bottom: 20px;
     left: 20px;
   }
+  
+  .spaceship-item{
+    width: 95%;
+    margin: 1px auto;
+    border-bottom: 1px solid #ccc;
+  }
 }
