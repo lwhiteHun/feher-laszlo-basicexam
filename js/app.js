@@ -18,10 +18,10 @@ function successAjax(xhttp) {
   advencedBubbleToOrderByPrice(userDatas);
   deleteConsumablesNullValuedObjects(userDatas);
   setNullToUnknownToAllObjectProperties(userDatas);
+
   showStatistics(userDatas);
+  searchForShip(userDatas, 'tie');
   showShipProperties(userDatas);
-  searchForShip(userDatas, 'star');
-  // console.log(userDatas);
 }
 getData('/json/spaceships.json', successAjax);
 
@@ -75,29 +75,13 @@ function setNullToUnknownToAllObjectProperties(inputArray) {
 4. Írasd ki így kapott hajók adatait.
 */
 function showShipProperties(inputArray) {
-  var result;
+  var result = '<h3>A szűrt hajók adatai</h3>';
   for (var i = 0; i < inputArray.length; i++) {
-    result += '<div class="spaceship-item">';
-    for (var k in inputArray[i]) {
-      if (inputArray[i].hasOwnProperty(k)) {
-        result += `${k} : ${inputArray[i][k]} `;
-      }
-    }
-    result += '</div>';
+    result += `<div class="spaceship-item">${showObjectProperties(inputArray[i])}</div>`;
   }
-  return result;
+  return resultToTarget('.spaceship-list', result, 'append');
 }
-/*
-function displayObjectProperties(inputObject) {return resultToTarget('.spaceship-list', result, 'append');
-  var result;
-  for (var k in inputObject) {
-    if (inputObject.hasOwnProperty(k)) {
-      result += `${k} : ${inputObject[k]} `;
-    }
-  }
-  return result;
-}
-*/
+
 function resultToTarget(target, value, type) {
   switch (type) {
   case 'new':
@@ -200,13 +184,22 @@ function searchForShip(inputArray, value) {
       results.push(inputArray[i]);
     }
   }
+
   var result;
   if (results.length > 1) {
-    result = resultToTarget('.spaceship-list', `<p>A keresett hajó: ${showObjectProperties(advencedBubbleToDescorderByValue(results, 'model')[0])}</p>`, 'append');
+    result = resultToTarget('.one-spaceship',
+      searchForShipShowFormat(showObjectProperties(advencedBubbleToDescorderByValue(results, 'model')[0])), 'append');
   } else {
-    result = resultToTarget('.spaceship-list', results, 'append');
+    result = resultToTarget('.one-spaceship', searchForShipShowFormat(showObjectProperties(results[0])), 'append');
   }
   return result;
+}
+
+function searchForShipShowFormat(value) {
+  return `<div class="one-spaceship-result">
+  <h3>A keresett hajó:</h3>
+  <p>${value}</p>
+  </div>`;
 }
 
 function advencedBubbleToDescorderByValue(inputArray) {
@@ -222,7 +215,6 @@ function advencedBubbleToDescorderByValue(inputArray) {
     }
     i = csere;
   }
-  console.log(inputArray);
   return inputArray;
 }
 
@@ -230,7 +222,10 @@ function showObjectProperties(inputObject) {
   var result = '';
   for (var k in inputObject) {
     if (inputObject.hasOwnProperty(k)) {
-      result += `${k} : ${inputObject[k]} `;
+      result += `${k} : ${inputObject[k]}<br> `;
+      if (k === 'image') {
+        result += showImg(inputObject[k]);
+      }
     }
   }
   return result;

@@ -80,8 +80,12 @@ div{
   }
   
   .spaceship-item{
-    width: 95%;
-    margin: 1px auto;
+    width: 99%;
+    margin: 0 auto;
     border-bottom: 1px solid #ccc;
+  }
+  .one-spaceship-result{
+    width: 95%;
+    background: #ddd;
   }
 }
