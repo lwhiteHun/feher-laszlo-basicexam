@@ -20,10 +20,17 @@ function successAjax(xhttp) {
   setNullToUnknownToAllObjectProperties(userDatas);
 
   showStatistics(userDatas);
-  searchForShip(userDatas, 'tie');
+  searchForShip(userDatas, 'destroyer');
   showShipProperties(userDatas);
+
+  var element = document.getElementById('search-button');
+  element.addEventListener('click', function () {
+    searchForShip(userDatas, document.getElementById('search-text'));
+  }
+  );
 }
 getData('/json/spaceships.json', successAjax);
+
 
 /*
 1. A kapott adatokat rendezd ár(cost_in_credits) szerint növekvő sorrendbe. (advanced bubble)
@@ -143,13 +150,6 @@ function statisticsSumPassengers(inputArray) {
 function stringToInt(value) {
   return parseInt(value, 10);
 }
-/*
-function valueIsNumber(value) {
-  if (typeof value === 'number' && !Number.isNaN(value)) {
-    return true;
-  }
-}
-*/
 
 function statisticsMaxLengthShip(inputArray) {
   var max = stringToInt(inputArray[0].lengthiness);
@@ -179,30 +179,58 @@ function showImg(imgSource) {
 
 function searchForShip(inputArray, value) {
   var results = [];
+
+  // console.log(newArray);
+  /*
+  var newArray = advencedBubbleToDescorderByModel(inputArray.slice());
+  var firstindex = 0;
+  var lastindex = inputArray.length - 1;
+  var middleindex;
+  var found = false;
+
+  while (firstindex <= lastindex && !found) {
+    middleindex = Math.floor((firstindex + lastindex) / 2);
+    if (inputArray[middleindex].model.toUpperCase().indexOf(value.toUpperCase()) > -1) {
+      results.push(newArray[middleindex]);
+      found = true;
+    } else if (newArray[middleindex].model.localeCompare(value) > -1) {
+      lastindex = middleindex - 1;
+    } else  {
+      firstindex = middleindex + 1;
+    }
+  }
+
+*/
+
   for (var i = 0; i < inputArray.length; i++) {
     if (inputArray[i].model.toUpperCase().indexOf(value.toUpperCase()) > -1) {
       results.push(inputArray[i]);
     }
   }
 
-  var result;
+
+  // var result;
   if (results.length > 1) {
-    result = resultToTarget('.one-spaceship',
-      searchForShipShowFormat(showObjectProperties(advencedBubbleToDescorderByValue(results, 'model')[0])), 'append');
-  } else {
-    result = resultToTarget('.one-spaceship', searchForShipShowFormat(showObjectProperties(results[0])), 'append');
+    return resultToTarget('.one-spaceship',
+      searchForShipShowFormat(showObjectProperties(advencedBubbleToDescorderByModel(results, 'model')[0])), 'append');
   }
-  return result;
+  return resultToTarget('.one-spaceship', searchForShipShowFormat(showObjectProperties(results[0])), 'append');
 }
 
 function searchForShipShowFormat(value) {
-  return `<div class="one-spaceship-result">
+  if (value.length > 0) {
+    return `<div class="one-spaceship-result">
   <h3>A keresett hajó:</h3>
   <p>${value}</p>
   </div>`;
+  }
+  return `<div class="one-spaceship-result">
+  <h3>Nincs találat a keresésre.</h3>
+  </div>`;
 }
 
-function advencedBubbleToDescorderByValue(inputArray) {
+function advencedBubbleToDescorderByModel(inputArray) {
+  /*
   var i = inputArray.length;
   var csere;
   while (i > 0) {
@@ -214,18 +242,28 @@ function advencedBubbleToDescorderByValue(inputArray) {
       }
     }
     i = csere;
+    */
+  for (var i = 0; i < inputArray.length - 1; i++) {
+    for (var j = i + 1; j < inputArray.length; j++) {
+      if (inputArray[i].model.localeCompare(inputArray[j].model) > 0) {
+        [inputArray[i], inputArray[j]] = [inputArray[j], inputArray[i]];
+      }
+    }
   }
   return inputArray;
 }
+
 
 function showObjectProperties(inputObject) {
   var result = '';
   for (var k in inputObject) {
     if (inputObject.hasOwnProperty(k)) {
       result += `${k} : ${inputObject[k]}<br> `;
+      /*
       if (k === 'image') {
         result += showImg(inputObject[k]);
       }
+      */
     }
   }
   return result;
