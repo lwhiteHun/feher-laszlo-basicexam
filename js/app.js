@@ -22,12 +22,6 @@ function successAjax(xhttp) {
   showStatistics(userDatas);
   searchForShip(userDatas, 'destroyer');
   showShipProperties(userDatas);
-
-  var element = document.getElementById('search-button');
-  element.addEventListener('click', function () {
-    searchForShip(userDatas, document.getElementById('search-text'));
-  }
-  );
 }
 getData('/json/spaceships.json', successAjax);
 
@@ -208,8 +202,6 @@ function searchForShip(inputArray, value) {
     }
   }
 
-
-  // var result;
   if (results.length > 1) {
     return resultToTarget('.one-spaceship',
       searchForShipShowFormat(showObjectProperties(advencedBubbleToDescorderByModel(results, 'model')[0])), 'append');
