@@ -1,31 +1,4 @@
 // ide deklaráljátok a függvényeket.
-
-function getData(url, callbackFunc) {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-      callbackFunc(this);
-    }
-  };
-  xhttp.open('GET', url, true);
-  xhttp.send();
-}
-
-function successAjax(xhttp) {
-  // Innen lesz elérhető a JSON file t{artalma, tehát az adatok amikkel dolgoznod kell
-  var userDatas = JSON.parse(xhttp.responseText);
-  // Innen lehet hívni.
-  advencedBubbleToOrderByPrice(userDatas);
-  deleteConsumablesNullValuedObjects(userDatas);
-  setNullToUnknownToAllObjectProperties(userDatas);
-
-  showStatistics(userDatas);
-  searchForShip(userDatas, 'destroyer');
-  showShipProperties(userDatas);
-}
-getData('/json/spaceships.json', successAjax);
-
-
 /*
 1. A kapott adatokat rendezd ár(cost_in_credits) szerint növekvő sorrendbe. (advanced bubble)
 */
@@ -173,7 +146,6 @@ function showImg(imgSource) {
 
 function searchForShip(inputArray, value) {
   var results = [];
-
   // console.log(newArray);
   /*
   var newArray = advencedBubbleToDescorderByModel(inputArray.slice());
@@ -201,6 +173,7 @@ function searchForShip(inputArray, value) {
       results.push(inputArray[i]);
     }
   }
+
 
   if (results.length > 1) {
     return resultToTarget('.one-spaceship',
@@ -242,6 +215,7 @@ function advencedBubbleToDescorderByModel(inputArray) {
       }
     }
   }
+  console.log(inputArray);
   return inputArray;
 }
 
@@ -260,3 +234,31 @@ function showObjectProperties(inputObject) {
   }
   return result;
 }
+
+
+function getData(url, callbackFunc) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      callbackFunc(this);
+    }
+  };
+  xhttp.open('GET', url, true);
+  xhttp.send();
+}
+
+function successAjax(xhttp) {
+  // Innen lesz elérhető a JSON file t{artalma, tehát az adatok amikkel dolgoznod kell
+  var userDatas = JSON.parse(xhttp.responseText);
+  // Innen lehet hívni.
+  advencedBubbleToOrderByPrice(userDatas);
+  deleteConsumablesNullValuedObjects(userDatas);
+  setNullToUnknownToAllObjectProperties(userDatas);
+
+  showStatistics(userDatas);
+  searchForShip(userDatas, 'star');
+  showShipProperties(userDatas);
+}
+getData('/json/spaceships.json', successAjax);
+
+
