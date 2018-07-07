@@ -215,7 +215,6 @@ function advencedBubbleToDescorderByModel(inputArray) {
       }
     }
   }
-  console.log(inputArray);
   return inputArray;
 }
 
