@@ -224,6 +224,8 @@ function showObjectProperties(inputObject) {
   for (var k in inputObject) {
     if (inputObject.hasOwnProperty(k)) {
       result += `${k} : ${inputObject[k]}<br> `;
+      // az img mappában nem volt minden kép hivatkozáshoz fizikai fájl
+      // ezért 404 errorok jelentek meg a console-ban, ezért ezt kivettem.
       /*
       if (k === 'image') {
         result += showImg(inputObject[k]);
