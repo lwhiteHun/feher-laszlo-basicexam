@@ -144,11 +144,13 @@ function showImg(imgSource) {
 * Írasd ki a hajó adatait.
 */
 
+
 function searchForShip(inputArray, value) {
+  // document.querySelector('.one-spaceship').innerHTML = '';
   var results = [];
   // console.log(newArray);
   /*
-  var newArray = advencedBubbleToDescorderByModel(inputArray.slice());
+  var newArray = descOrderByModel(inputArray.slice());
   var firstindex = 0;
   var lastindex = inputArray.length - 1;
   var middleindex;
@@ -177,7 +179,7 @@ function searchForShip(inputArray, value) {
 
   if (results.length > 1) {
     return resultToTarget('.one-spaceship',
-      searchForShipShowFormat(showObjectProperties(advencedBubbleToDescorderByModel(results, 'model')[0])), 'append');
+      searchForShipShowFormat(showObjectProperties(descOrderByModel(results, 'model')[0])), 'append');
   }
   return resultToTarget('.one-spaceship', searchForShipShowFormat(showObjectProperties(results[0])), 'append');
 }
@@ -194,20 +196,8 @@ function searchForShipShowFormat(value) {
   </div>`;
 }
 
-function advencedBubbleToDescorderByModel(inputArray) {
-  /*
-  var i = inputArray.length;
-  var csere;
-  while (i > 0) {
-    csere = 0;
-    for (var j = 0; j < i - 1; j++) {
-      if (inputArray[j].model.localeCompare(inputArray[j + 1].model) > 0) {
-        [inputArray[j], inputArray[j + 1]] = [inputArray[j + 1], inputArray[j]];
-        csere = j;
-      }
-    }
-    i = csere;
-    */
+function descOrderByModel(inputArray) {
+  var newInputArray = inputArray.slice();
   for (var i = 0; i < inputArray.length - 1; i++) {
     for (var j = i + 1; j < inputArray.length; j++) {
       if (inputArray[i].model.localeCompare(inputArray[j].model) > 0) {
@@ -215,7 +205,7 @@ function advencedBubbleToDescorderByModel(inputArray) {
       }
     }
   }
-  return inputArray;
+  return newInputArray;
 }
 
 
@@ -248,6 +238,7 @@ function getData(url, callbackFunc) {
   xhttp.send();
 }
 
+
 function successAjax(xhttp) {
   // Innen lesz elérhető a JSON file t{artalma, tehát az adatok amikkel dolgoznod kell
   var userDatas = JSON.parse(xhttp.responseText);
@@ -257,8 +248,15 @@ function successAjax(xhttp) {
   setNullToUnknownToAllObjectProperties(userDatas);
 
   showStatistics(userDatas);
-  searchForShip(userDatas, 'star');
+
   showShipProperties(userDatas);
+
+  var search = document.querySelector('#search-button');
+  search.addEventListener('click', function () {
+    console.log(document.querySelector('#search-text').value);
+    searchForShip(userDatas, document.querySelector('#search-text').value);
+  });
+  // searchForShip(userDatas, 'star');
 }
 getData('/json/spaceships.json', successAjax);
 
